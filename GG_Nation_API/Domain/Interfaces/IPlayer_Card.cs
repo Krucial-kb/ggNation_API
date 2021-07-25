@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Domain.Inner_Models;
+using Domain.Models;
 
 namespace Domain.Interfaces
 {
     public interface IPlayer_Card
     {
-        Task<List<Inner_PlayerCard>> GetAllPlayers(string search = null);
-        Task<Inner_PlayerCard> GetPlayerByID(int PlayerID);
-        Task<Inner_PlayerCard> CreateNewPlayer(Inner_PlayerCard newPlayer);
-        Task UpdatePlayerCard(Inner_PlayerCard updatePlayer);
-        Task DeletePlayer(int PlayerID);
+        //GET ALL
+        Task<List<Player>> GetAllAsync(string search = null);
+        //GET (ID) ASYNC
+        Task<Player> GetByIDAsync(int PlayerID);
+        //POST CALL
+        void AddAsync(Player newPlayer);
+        //PUT CALL
+        Task<bool> UpdateAsync(Player updatePlayer, int id);
+        //DELETE CALL
+        void DeletePlayer(Player player);
+        //Persists to Database
+        Task<int> SaveChangesAsync();
+        //From Db to Client (List)
+        Task<IEnumerable<Player>> ToListAsync();
 
     }
 }

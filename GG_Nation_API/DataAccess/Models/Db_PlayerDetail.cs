@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DataAccess.DbModel
+namespace DataAccess.Models
 {
     public partial class Db_PlayerDetail
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Inner_Models;
+using Domain.Models;
 using Domain.Interfaces;
-using DataAccess.DbModel;
+using DataAccess.Models;
 using DataAccess.Logic;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,86 +21,75 @@ namespace DataAccess.Repos
         {
             this._context = context;
         }
-
         #endregion
-
-        /// <summary>
-        /// Creates new player/adds to the DB
-        /// </summary>
-        /// <param name="newPlayer"></param>
-        /// <returns></returns>
-        public async Task<Inner_PlayerCard> CreateNewPlayer(Inner_PlayerCard newPlayer)
+        public void AddAsync(Domain.Models.Player newPlayer)
         {
-
-            var newPlayerCard = Mapper.UnMapPlayerCard(newPlayer);
-            _context.PlayerCards.Add(newPlayerCard);
-            await Save();
-
-            return Mapper.MapPlayerCard(newPlayerCard);
+            var mappedPlayer = Mapper.MapPlayerData(newPlayer);
+            _context.Set<DataAccess.Models.Player>().Add(mappedPlayer);
         }
 
-        /// <summary>
-        /// Deletes player from the DB
-        /// </summary>
-        /// <param name="PlayerID"></param>
-        /// <returns></returns>
-        public async Task DeletePlayer(int PlayerID)
+        public void DeletePlayer(Domain.Models.Player player)
         {
-            //Finds the selected player to stage for deletion.
-            var Player = await _context.PlayerCards.FindAsync(PlayerID);
+            var mappedEntity = Mapper.MapPlayerData(player);
+            _context.Set<DataAccess.Models.Player>().Remove(mappedEntity);
+        }
 
-            if (Player is null)
+        public async Task<List<Domain.Models.Player>> GetAllAsync(string search = null)
+        {
+            var entities = await _context.Set<DataAccess.Models.Player>().ToListAsync();
+            var mappedEntities = new List<Domain.Models.Player>();
+            foreach (var entity in entities)
             {
-                return;
+                mappedEntities.Add(Mapper.MapPlayerDomain(entity));
             }
-
-            //Removes Player from DB
-            _context.PlayerCards.Remove(Player);
-            await Save();
+            return mappedEntities;
         }
 
-        /// <summary>
-        /// Returns all the players in the DB by name.
-        /// </summary>
-        /// <param name="search"></param>
-        /// <returns></returns>
-        public async Task<List<Inner_PlayerCard>> GetAllPlayers(string search = null)
+        public async Task<Domain.Models.Player> GetByIDAsync(int PlayerID)
         {
-            var allPlayers = await _context.PlayerCards.ToListAsync();
+            var data = await _context.Set<DataAccess.Models.Player>().FindAsync(PlayerID);
 
-            if (search == null)
+            return Mapper.MapPlayerDomain(data);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+           return await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Domain.Models.Player>> ToListAsync()
+        {
+            return await GetAllAsync();
+        }
+
+        public async Task<bool> UpdateAsync(Domain.Models.Player updatePlayer, int id)
+        {
+            var mappedEmployee = Mapper.MapPlayerData(updatePlayer);
+            /*_context.Entry(employee).State = EntityState.Modified;*/
+            _context.Entry(mappedEmployee).State = EntityState.Modified;
+
+            try
             {
-                return allPlayers.Select(Mapper.MapPlayerCard).ToList();
+                await SaveChangesAsync();
             }
-                            return (allPlayers.FindAll(p =>
-                   p.PlayerName.ToLower().Contains(search.ToLower())
-                  )).Select(Mapper.MapPlayerCard).ToList();
+            catch (DbUpdateConcurrencyException)
+            {
+                if (mappedEmployee == null)
+                {
+                    return false;
+                    // employee not found
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return true;
+            // it worked, so return true
         }
 
-        /// <summary>
-        /// Returns the player by ID or by search.ke
-        /// </summary>
-        /// <param name="PlayerID"></param>
-        /// <returns></returns>
-        public async Task<Inner_PlayerCard> GetPlayerByID(int PlayerID)
-        {
-            var playerByID = await _context.PlayerCards.FirstOrDefaultAsync(a => a.PlayerId == PlayerID);
 
-            return Mapper.MapPlayerCard(playerByID);
-        }
 
-        public async Task UpdatePlayerCard(Inner_PlayerCard updatePlayer)
-        {
-            Db_PlayerCard currEntity = await _context.PlayerCards.FindAsync(updatePlayer.PlayerID);
-            Db_PlayerCard newEntity = Mapper.UnMapPlayerCard(updatePlayer);
 
-            _context.Entry(currEntity).CurrentValues.SetValues(newEntity);
-            await Save();
-        }
-
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
     }
 }

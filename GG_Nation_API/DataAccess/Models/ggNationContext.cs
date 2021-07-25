@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace DataAccess.DbModel
+namespace DataAccess.Models
 {
     public partial class ggNationContext : DbContext
     {
@@ -18,7 +18,7 @@ namespace DataAccess.DbModel
         }
 
         public virtual DbSet<Db_MessageDetail> MessageDetails { get; set; }
-        public virtual DbSet<Db_PlayerCard> PlayerCards { get; set; }
+        public virtual DbSet<Player> PlayerCards { get; set; }
         public virtual DbSet<Db_PlayerDetail> PlayerDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -52,7 +52,7 @@ namespace DataAccess.DbModel
                 entity.Property(e => e.MessagesId).HasColumnName("MessagesID");
             });
 
-            modelBuilder.Entity<Db_PlayerCard>(entity =>
+            modelBuilder.Entity<Player>(entity =>
             {
                 entity.HasKey(e => e.PlayerId)
                     .HasName("PK__Player_C__4A4E74A865D3C180");

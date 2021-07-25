@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DataAccess.DbModel
+namespace DataAccess.Models
 {
-    public partial class Db_PlayerCard
+    public partial class Player
     {
         public int PlayerId { get; set; }
         public int PlayerCardUid { get; set; }

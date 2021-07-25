@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Inner_Models;
-using DataAccess.DbModel;
+using Domain.Models;
+using DataAccess.Models;
 
 namespace DataAccess.Logic
 {
@@ -14,31 +14,31 @@ namespace DataAccess.Logic
         // ! ***********************************
         // ! ********* Player Card *************
         // ! ***********************************
-        public static Inner_PlayerCard MapPlayerCard(Db_PlayerCard playerCard)
+        public static Domain.Models.Player MapPlayerDomain(DataAccess.Models.Player player)
         {
-            return new Inner_PlayerCard
+            return new Domain.Models.Player
             {
-                PlayerID = playerCard.PlayerId,
-                PlayerCard_UID = playerCard.PlayerCardUid,
-                Player_Name = playerCard.PlayerName,
-                Player_Display_Name = playerCard.PlayerDisplayName,
-                Player_Email = playerCard.PlayerEmail,
-                Player_Password = playerCard.PlayerPassword,
-                Player_Image = playerCard.PlayerImage
+                PlayerID = player.PlayerId,
+                PlayerCard_UID = player.PlayerCardUid,
+                Player_Name = player.PlayerName,
+                Player_Display_Name = player.PlayerDisplayName,
+                Player_Email = player.PlayerEmail,
+                Player_Password = player.PlayerPassword,
+                Player_Image = player.PlayerImage
             };
         }
 
-        public static Db_PlayerCard UnMapPlayerCard(Inner_PlayerCard playerCard)
+        public static DataAccess.Models.Player MapPlayerData(Domain.Models.Player player)
         {
-            return new Db_PlayerCard
+            return new Models.Player
             {
-                PlayerId = playerCard.PlayerID,
-                PlayerCardUid = playerCard.PlayerCard_UID,
-                PlayerName = playerCard.Player_Name,
-                PlayerDisplayName = playerCard.Player_Display_Name,
-                PlayerEmail = playerCard.Player_Email,
-                PlayerPassword = playerCard.Player_Password,
-                PlayerImage = playerCard.Player_Image
+                PlayerId = player.PlayerID,
+                PlayerCardUid = player.PlayerCard_UID,
+                PlayerName = player.Player_Name,
+                PlayerDisplayName = player.Player_Display_Name,
+                PlayerEmail = player.Player_Email,
+                PlayerPassword = player.Player_Password,
+                PlayerImage = player.Player_Image
             };
         }
 
