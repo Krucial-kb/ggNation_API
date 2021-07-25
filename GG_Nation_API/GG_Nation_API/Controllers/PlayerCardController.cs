@@ -13,22 +13,23 @@ using DataAccess.Logic;
 using Domain.Logic;
 
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Domain.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PlayerCardController : ControllerBase
     {
-
+        #region Depend Inject
         private readonly IPlayer_Card _playerRepository;
         private readonly ILogger<PlayerCardController> _logger;
 
-        public PlayerCardController()
+        public PlayerCardController(IPlayer_Card playerRepository, ILogger<PlayerCardController> logger)
         {
-
+            _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger.LogInformation($"Accessed PatientController");
         }
+        #endregion
 
         // GET: api/<PlayerCardController>
         [Authorize]
