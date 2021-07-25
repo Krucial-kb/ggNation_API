@@ -12,11 +12,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.Interfaces;
 using DataAccess.Repos;
+using Microsoft.OpenApi.Models;
 
 namespace Domain
 {
     public class Startup
     {
+        private const string CorsPolicyName = "AllowConfiguredOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,12 +31,23 @@ namespace Domain
         {
 
             services.AddScoped<IPlayer_Card,PlayerCard_repo>();
-            services.AddRazorPages();
-            services.AddMvc();
-            string conStr = this.Configuration.GetConnectionString("ggNation");
 
-            //Configure Swagger Services
-            services.AddSwaggerGen();
+            // support switching between database providers using runtime configuration
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ggNation API", Version = "v1" });
+            });
+
+            var allowedOrigins = Configuration.GetSection("CorsOrigins").Get<string[]>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CorsPolicyName, builder =>
+                    builder.WithOrigins(allowedOrigins ?? Array.Empty<string>())
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

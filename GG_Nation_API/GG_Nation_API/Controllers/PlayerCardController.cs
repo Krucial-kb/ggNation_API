@@ -35,9 +35,10 @@ namespace Domain.Controllers
         [ProducesResponseType(typeof(List<>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetASync([FromQuery] string search = null)
+        public async Task<IActionResult> GetASync()
         {
-            return Ok();
+            var allPlayers = await _playerRepository.GetAllAsync();
+            return Ok(allPlayers);
         }
 
         // GET api/<PlayerCardController>/5

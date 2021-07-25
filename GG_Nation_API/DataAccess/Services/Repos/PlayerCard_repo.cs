@@ -34,7 +34,7 @@ namespace DataAccess.Repos
             _context.Set<DataAccess.Models.Player>().Remove(mappedEntity);
         }
 
-        public async Task<List<Domain.Models.Player>> GetAllAsync(string search = null)
+        public async Task<IEnumerable<Domain.Models.Player>> GetAllAsync()
         {
             var entities = await _context.Set<DataAccess.Models.Player>().ToListAsync();
             var mappedEntities = new List<Domain.Models.Player>();

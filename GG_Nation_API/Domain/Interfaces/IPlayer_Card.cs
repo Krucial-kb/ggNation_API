@@ -9,7 +9,7 @@ namespace Domain.Interfaces
     public interface IPlayer_Card
     {
         //GET ALL
-        Task<List<Player>> GetAllAsync(string search = null);
+        Task<IEnumerable<Player>> GetAllAsync();
         //GET (ID) ASYNC
         Task<Player> GetByIDAsync(int PlayerID);
         //POST CALL
