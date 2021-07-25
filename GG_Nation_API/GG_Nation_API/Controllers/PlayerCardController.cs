@@ -115,14 +115,40 @@ namespace Domain.Controllers
 
         // PUT api/<PlayerCardController>/5
         [HttpPut("{id}")]
-        public void PutAsync(int id, [FromBody] string value)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Transfer_PlayerCard player)
         {
+            _logger.LogInformation($"Editing Player with id {id}.");
+            var entity = await _playerRepository.GetPlayerByID(id);
+            if (entity is Inner_PlayerCard)
+            {
+                entity.PlayerID = player.PlayerID;
+                entity.PlayerCard_UID = player.PlayerCard_UID;
+                entity.Player_Name = player.Player_Name;
+                entity.Player_Display_Name = player.Player_Display_Name;
+                entity.Player_Email = player.Player_Email;
+                entity.Player_Password = player.Player_Password;
+                entity.Player_Image = player.Player_Image;
+
+
+                await _playerRepository.UpdatePlayerCard(entity);
+                return NoContent();
+            }
+            _logger.LogInformation($"No patients found with id {id}.");
+            return NotFound();
         }
 
         // DELETE api/<PlayerCardController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            _logger.LogInformation($"Deleting Player with id {id}.");
+            if (await _playerRepository.GetPlayerByID(id) is Inner_PlayerCard player)
+            {
+                await _playerRepository.DeletePlayer(player.PlayerID);
+                return NoContent();
+            }
+            _logger.LogInformation($"No Player found with id {id}.");
+            return NotFound();
         }
     }
 }
