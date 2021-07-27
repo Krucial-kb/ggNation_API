@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class Player
+    public class PlayerCard
     {
         public int PlayerID { get; set; }
         public int PlayerCard_UID { get; set; }

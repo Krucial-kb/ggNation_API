@@ -10,11 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Domain.Interfaces;
+using DataAccess.Interfaces;
 using DataAccess.Repos;
 using Microsoft.OpenApi.Models;
+using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain
+namespace DataAccess
 {
     public class Startup
     {
@@ -30,7 +32,14 @@ namespace Domain
         public void ConfigureServices(IServiceCollection services)
         {
 
+
+
+
+            //Services Lifetime
             services.AddScoped<IPlayer_Card,PlayerCard_repo>();
+
+
+
 
             // support switching between database providers using runtime configuration
             services.AddSwaggerGen(c =>

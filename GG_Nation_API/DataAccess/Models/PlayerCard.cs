@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class Player
+    public partial class PlayerCard
     {
         public int PlayerId { get; set; }
         public int PlayerCardUid { get; set; }

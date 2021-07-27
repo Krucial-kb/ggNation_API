@@ -17,9 +17,9 @@ namespace DataAccess.Models
         {
         }
 
-        public virtual DbSet<Db_MessageDetail> MessageDetails { get; set; }
-        public virtual DbSet<Player> PlayerCards { get; set; }
-        public virtual DbSet<Db_PlayerDetail> PlayerDetails { get; set; }
+        public virtual DbSet<MessageDetail> MessageDetails { get; set; }
+        public virtual DbSet<PlayerCard> PlayerCards { get; set; }
+        public virtual DbSet<PlayerDetail> PlayerDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,7 +34,7 @@ namespace DataAccess.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<Db_MessageDetail>(entity =>
+            modelBuilder.Entity<MessageDetail>(entity =>
             {
                 entity.HasKey(e => e.MessageDetailsId)
                     .HasName("PK__Message___41EE4DAFE13BAE49");
@@ -52,7 +52,7 @@ namespace DataAccess.Models
                 entity.Property(e => e.MessagesId).HasColumnName("MessagesID");
             });
 
-            modelBuilder.Entity<Player>(entity =>
+            modelBuilder.Entity<PlayerCard>(entity =>
             {
                 entity.HasKey(e => e.PlayerId)
                     .HasName("PK__Player_C__4A4E74A865D3C180");
@@ -86,7 +86,7 @@ namespace DataAccess.Models
                     .HasColumnName("Player_Password");
             });
 
-            modelBuilder.Entity<Db_PlayerDetail>(entity =>
+            modelBuilder.Entity<PlayerDetail>(entity =>
             {
                 entity.HasKey(e => e.DetailsId)
                     .HasName("PK__Player_d__BAC862ACF72EB1D5");

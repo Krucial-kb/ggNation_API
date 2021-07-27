@@ -3,15 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Domain.Models;
-using Domain.Interfaces;
+using DataAccess.Models;
+using DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using DataAccess.Logic;
-using Domain.Models;
+using DataAccess.Models;
 
-namespace Domain.Controllers
+namespace DataAccess.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -37,18 +37,18 @@ namespace Domain.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetASync()
         {
-            var allPlayers = await _playerRepository.GetAllAsync();
+            var allPlayers = await _playerRepository.ToListAsync();
             return Ok(allPlayers);
         }
 
         // GET api/<PlayerCardController>/5
         [Authorize]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Player), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PlayerCard), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Player>> GetByIdAsync(int id)
+        public async Task<ActionResult<PlayerCard>> GetByIdAsync(int id)
         {
             var playerByID = await _playerRepository.GetByIDAsync(id);
 
@@ -63,19 +63,19 @@ namespace Domain.Controllers
         // POST api/<PlayerCardController>
         [Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(Player), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PlayerCard), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PostAsync(int id, Player Player)
+        public async Task<IActionResult> PostAsync(int id, Domain.Models.PlayerCard PlayerCard)
         {
-            if (id != Player.PlayerID)
+            if (id != PlayerCard.PlayerID)
             {
                 return BadRequest();
             }
 
             /*_context.Entry(customer).State = EntityState.Modified;*/
-            if (!await _playerRepository.UpdateAsync(Player, id))
+            if (!await _playerRepository.UpdateAsync(PlayerCard, id))
             {
                 return NotFound();
                 // if false, then modifying state failed
@@ -93,7 +93,7 @@ namespace Domain.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
-        public async Task<IActionResult> PutAsync(int id, Domain.Models.Player player)
+        public async Task<IActionResult> PutAsync(int id, Domain.Models.PlayerCard player)
         {
             if (id != player.PlayerID)
             {

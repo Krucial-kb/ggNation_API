@@ -3,34 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Models;
 using DataAccess.Models;
+
+
 
 namespace DataAccess.Logic
 {
     public static class Mapper
     {
-        #region Player Card Map and UnMap
+        #region PlayerCard Card Map and UnMap
         // ! ***********************************
-        // ! ********* Player Card *************
+        // ! ********* PlayerCard Card *************
         // ! ***********************************
-        public static Domain.Models.Player MapPlayerDomain(DataAccess.Models.Player player)
+        public static DataAccess.Models.PlayerCard MapPlayerDomain(Domain.Models.PlayerCard player)
         {
-            return new Domain.Models.Player
-            {
-                PlayerID = player.PlayerId,
-                PlayerCard_UID = player.PlayerCardUid,
-                Player_Name = player.PlayerName,
-                Player_Display_Name = player.PlayerDisplayName,
-                Player_Email = player.PlayerEmail,
-                Player_Password = player.PlayerPassword,
-                Player_Image = player.PlayerImage
-            };
-        }
-
-        public static DataAccess.Models.Player MapPlayerData(Domain.Models.Player player)
-        {
-            return new Models.Player
+            return new DataAccess.Models.PlayerCard
             {
                 PlayerId = player.PlayerID,
                 PlayerCardUid = player.PlayerCard_UID,
@@ -39,6 +26,20 @@ namespace DataAccess.Logic
                 PlayerEmail = player.Player_Email,
                 PlayerPassword = player.Player_Password,
                 PlayerImage = player.Player_Image
+            };
+        }
+
+        public static Domain.Models.PlayerCard MapPlayerData(DataAccess.Models.PlayerCard player)
+        {
+            return new Domain.Models.PlayerCard
+            {
+                PlayerID = player.PlayerId,
+                PlayerCard_UID = player.PlayerCardUid,
+                Player_Name = player.PlayerName,
+                Player_Display_Name = player.PlayerDisplayName,
+                Player_Email = player.PlayerEmail,
+                Player_Password = player.PlayerPassword,
+                Player_Image = player.PlayerImage
             };
         }
 
