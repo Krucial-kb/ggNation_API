@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.Models;
 
-namespace DataAccess.Interfaces
+namespace Domain.Interfaces
 {
     public interface IPlayer_Card
     {

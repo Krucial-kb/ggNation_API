@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
-using DataAccess.Interfaces;
-using DataAccess.Models;
+using Domain.Interfaces;
 using DataAccess.Logic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess.Repos
 {
@@ -16,10 +16,11 @@ namespace DataAccess.Repos
         #region Dependency Injection
         
         private readonly ggNationContext _context;
+        
 
-        public PlayerCard_repo(ggNationContext context)
+        public PlayerCard_repo(IServiceProvider service)
         {
-            this._context = context;
+            _context = service.CreateScope().ServiceProvider.GetRequiredService<ggNationContext>();
         }
         #endregion
         public void AddAsync(Domain.Models.PlayerCard newPlayer)

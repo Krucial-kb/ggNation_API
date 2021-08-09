@@ -8,8 +8,7 @@ using DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using DataAccess.Logic;
-using DataAccess.Models;
+using Domain.Interfaces;
 
 namespace DataAccess.Controllers
 {
@@ -25,7 +24,7 @@ namespace DataAccess.Controllers
         {
             _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _logger.LogInformation($"Accessed PatientController");
+            _logger.LogInformation($"Accessed PlayerCardController");
         }
         #endregion
 
@@ -35,7 +34,7 @@ namespace DataAccess.Controllers
         [ProducesResponseType(typeof(List<>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetASync()
+        public async Task<ActionResult<IEnumerable<Domain.Models.PlayerCard>>> GetASync()
         {
             var allPlayers = await _playerRepository.ToListAsync();
             return Ok(allPlayers);
@@ -48,7 +47,7 @@ namespace DataAccess.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PlayerCard>> GetByIdAsync(int id)
+        public async Task<ActionResult<Domain.Models.PlayerCard>> GetByIdAsync(int id)
         {
             var playerByID = await _playerRepository.GetByIDAsync(id);
 

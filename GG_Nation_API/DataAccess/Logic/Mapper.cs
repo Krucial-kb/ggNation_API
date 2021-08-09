@@ -13,7 +13,7 @@ namespace DataAccess.Logic
     {
         #region PlayerCard Card Map and UnMap
         // ! ***********************************
-        // ! ********* PlayerCard Card *************
+        // ! ********* PlayerCard Card *********
         // ! ***********************************
         public static DataAccess.Models.PlayerCard MapPlayerDomain(Domain.Models.PlayerCard player)
         {
