@@ -13,7 +13,7 @@ namespace Domain.Interfaces
         //GET (ID) ASYNC
         Task<PlayerCard> GetByIDAsync(int PlayerID);
         //POST CALL
-        void AddAsync(PlayerCard newPlayer);
+        void PostPlayerAsync(PlayerCard newPlayer);
         //PUT CALL
         Task<bool> UpdateAsync(PlayerCard updatePlayer, int id);
         //DELETE CALL

@@ -8,6 +8,7 @@ using Domain.Interfaces;
 using DataAccess.Logic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DataAccess.Repos
 {
@@ -16,14 +17,16 @@ namespace DataAccess.Repos
         #region Dependency Injection
         
         private readonly ggNationContext _context;
-        
+        private readonly ILogger<PlayerCard_repo> _logger;
 
-        public PlayerCard_repo(IServiceProvider service)
+
+        public PlayerCard_repo(ggNationContext _ctx, ILogger<PlayerCard_repo> logger)
         {
-            _context = service.CreateScope().ServiceProvider.GetRequiredService<ggNationContext>();
+            _context = _ctx;
+            _logger = logger;
         }
         #endregion
-        public void AddAsync(Domain.Models.PlayerCard newPlayer)
+        public void PostPlayerAsync(Domain.Models.PlayerCard newPlayer)
         {
             var mappedPlayer = Mapper.MapPlayerDomain(newPlayer);
             _context.Set<DataAccess.Models.PlayerCard>().Add(mappedPlayer);
@@ -37,20 +40,23 @@ namespace DataAccess.Repos
 
         public async Task<IEnumerable<Domain.Models.PlayerCard>> GetAllAsync()
         {
-            var entities = await _context.Set<DataAccess.Models.PlayerCard>().ToListAsync();
-            var mappedEntities = new List<Domain.Models.PlayerCard>();
-            foreach (var entity in entities)
-            {
-                mappedEntities.Add(Mapper.MapPlayerData(entity));
-            }
-            return mappedEntities;
+            var players = await _context.PlayerCards.ToListAsync();
+
+            var result = players.Select(Mapper.MapPlayerData);
+
+            return result;
         }
 
         public async Task<Domain.Models.PlayerCard> GetByIDAsync(int PlayerID)
         {
-            var data = await _context.Set<DataAccess.Models.PlayerCard>().FindAsync(PlayerID);
-
-            return Mapper.MapPlayerData(data);
+            var player = await _context.PlayerCards.FirstOrDefaultAsync(u => u.PlayerId == PlayerID);
+            if (player == null)
+            {
+                _logger.LogInformation($"User with id {PlayerID} not found.");
+                return null;
+            }
+            _logger.LogInformation($"Fetched user with id {PlayerID}.");
+            return Mapper.MapPlayerData(player);
         }
 
         public async Task<int> SaveChangesAsync()

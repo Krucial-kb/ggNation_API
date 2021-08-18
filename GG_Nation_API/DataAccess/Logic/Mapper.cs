@@ -17,11 +17,12 @@ namespace DataAccess.Logic
         // ! ***********************************
         public static DataAccess.Models.PlayerCard MapPlayerDomain(Domain.Models.PlayerCard player)
         {
-            return new DataAccess.Models.PlayerCard
+            return player is null ? null : new DataAccess.Models.PlayerCard
             {
                 PlayerId = player.PlayerID,
-                PlayerCardUid = player.PlayerCard_UID,
-                PlayerName = player.Player_Name,
+                UniqueId = player.UniqueId,
+                FirstName = player.FirstName,
+                LastName = player.LastName,
                 PlayerDisplayName = player.Player_Display_Name,
                 PlayerEmail = player.Player_Email,
                 PlayerPassword = player.Player_Password,
@@ -31,11 +32,12 @@ namespace DataAccess.Logic
 
         public static Domain.Models.PlayerCard MapPlayerData(DataAccess.Models.PlayerCard player)
         {
-            return new Domain.Models.PlayerCard
+            return player is null ? null : new Domain.Models.PlayerCard
             {
                 PlayerID = player.PlayerId,
-                PlayerCard_UID = player.PlayerCardUid,
-                Player_Name = player.PlayerName,
+                UniqueId = player.UniqueId,
+                FirstName = player.FirstName,
+                LastName = player.LastName,
                 Player_Display_Name = player.PlayerDisplayName,
                 Player_Email = player.PlayerEmail,
                 Player_Password = player.PlayerPassword,

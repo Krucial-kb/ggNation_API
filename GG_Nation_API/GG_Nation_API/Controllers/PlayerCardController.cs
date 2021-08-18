@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Domain.Interfaces;
+using DataAccess.Logic;
 
 namespace DataAccess.Controllers
 {
@@ -20,11 +21,9 @@ namespace DataAccess.Controllers
         private readonly IPlayer_Card _playerRepository;
         private readonly ILogger<PlayerCardController> _logger;
 
-        public PlayerCardController(IPlayer_Card playerRepository, ILogger<PlayerCardController> logger)
+        public PlayerCardController(IPlayer_Card playerRepository)
         {
-            _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _logger.LogInformation($"Accessed PlayerCardController");
+            _playerRepository = playerRepository;
         }
         #endregion
 
@@ -34,10 +33,12 @@ namespace DataAccess.Controllers
         [ProducesResponseType(typeof(List<>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Domain.Models.PlayerCard>>> GetASync()
+        public async Task<ActionResult<IEnumerable<Domain.Models.PlayerCard>>> GetPlayers()
         {
-            var allPlayers = await _playerRepository.ToListAsync();
-            return Ok(allPlayers);
+            var allPlayers = await _playerRepository.GetAllAsync();
+            IEnumerable<PlayerCard> resource = allPlayers.Select(Mapper.MapPlayerDomain);
+
+            return Ok(resource);
         }
 
         // GET api/<PlayerCardController>/5
@@ -68,22 +69,10 @@ namespace DataAccess.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostAsync(int id, Domain.Models.PlayerCard PlayerCard)
         {
-            if (id != PlayerCard.PlayerID)
-            {
-                return BadRequest();
-            }
+            _playerRepository.PostPlayerAsync(PlayerCard);
+            await _playerRepository.SaveChangesAsync();
 
-            /*_context.Entry(customer).State = EntityState.Modified;*/
-            if (!await _playerRepository.UpdateAsync(PlayerCard, id))
-            {
-                return NotFound();
-                // if false, then modifying state failed
-            }
-            else
-            {
-                return NoContent();
-                // successful put
-            }
+            return CreatedAtAction("GetEmployee", new { id = PlayerCard.PlayerID }, PlayerCard);
         }
 
         // PUT api/<PlayerCardController>/5
